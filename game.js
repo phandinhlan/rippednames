@@ -1,3 +1,5 @@
+'use strict';
+
 Player.prototype.Player = function (Id) {
     Hoek.assert(this instanceof Player, 'Player must be instantiated using new');
     this.Id = Id;
