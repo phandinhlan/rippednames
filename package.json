@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "",
+    "lint": "lab -d -f -L"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,8 @@
   "dependencies": {
     "express": "^4.10.2",
     "socket.io": "^1.4.5"
+  },
+  "devDependencies": {
+    "lab": "^10.3.1"
   }
 }
