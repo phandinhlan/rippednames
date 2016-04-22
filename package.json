@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "",
-    "lint": "./node_modules/lab/bin/lab -d -f -L"
+    "lint": "lab -d -f -L"
   },
   "repository": {
     "type": "git",

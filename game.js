@@ -1,14 +1,16 @@
 'use strict';
 
-var Hoek = require('hoek');
+const Hoek = require('hoek');
 
-Player.prototype.Player = function (Id) {
+const internals = {};
+
+exports = module.exports = internals.Player = function (id) {
 
     Hoek.assert(this instanceof Player, 'Player must be instantiated using new');
-    this.Id = Id;
+    this.Id = id;
 };
 
-Team.prototype.Team = function (Id) {
+exports = module.exports = internals.Team = function (id) {
 
     Hoek.assert(this instanceof Team, 'Team must be instantiated using new');
     this.Id = Id;
@@ -17,7 +19,7 @@ Team.prototype.Team = function (Id) {
 };
 
 //--    Game
-Game.prototype.Game = function (Id, creator) {
+exports = module.exports = internals.Game = function (id, creator) {
 
     Hoek.assert(this instanceof Game, 'Game must be instantiated using new');
     this.Id = Id;
@@ -33,12 +35,12 @@ Game.prototype.Game = function (Id, creator) {
 };
 
 //--    Game setup
-Game.prototype.AddPlayer = function (player) {
+internals.Game.prototype.AddPlayer = function (player) {
 
     this.players.set(player.Id, player);
 };
 
-Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
+internals.Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
 
     const otherTeamId = (teamId === 0) ? 1 : 0;    //note: hardcoded to 2 teams
     if (this.teams[otherTeamId].has(playerId) === true) {
@@ -50,7 +52,7 @@ Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
     }
 };
 
-Game.prototype.ChooseSpyMasters = function () {
+internals.Game.prototype.ChooseSpyMasters = function () {
 
     if (this.teamedUp === false) {
         //TODO: handle\report error
@@ -66,7 +68,7 @@ Game.prototype.ChooseSpyMasters = function () {
     this._CreditReadyToStartCondition();
 };
 
-Game.prototype.Start = function () {
+internals.Game.prototype.Start = function () {
 
     if (this._IsReadyToStart() === false) {
         return;
@@ -80,18 +82,18 @@ Game.prototype.Start = function () {
     this.gameStarted = true;
 };
 
-Game.prototype.IsReadyToStart = function () {
+internals.Game.prototype.IsReadyToStart = function () {
 
     return (this.readyToStart === 0);
 };
 
-Game.prototype._CreditReadyToStartCondition = function () {
+internals.Game.prototype._CreditReadyToStartCondition = function () {
 
     Hoek.assert(this.IsReadyToStart() === false, 'Ready to start condition out of sync');
     --this.readyToStart;
 };
 
-Game.prototype._DebitReadyToStartCondition = function () {
+internals.Game.prototype._DebitReadyToStartCondition = function () {
 
     Hoek.assert(this.readyToStart !== READY_TO_START_CONDITION_MAX, 'Ready to start condition out of sync');
     ++this.readyToStart;
