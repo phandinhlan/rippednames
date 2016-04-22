@@ -4,28 +4,28 @@ const Hoek = require('hoek');
 
 const internals = {};
 
-exports = module.exports = internals.Player = function (id) {
+exports.Player = module.exports.Player = internals.Player = function (id) {
 
     Hoek.assert(this instanceof internals.Player, 'Player must be instantiated using new');
     this.Id = id;
 };
 
-exports = module.exports = internals.Team = function (id) {
+exports.Team = module.exports.Team = internals.Team = function (id) {
 
     Hoek.assert(this instanceof internals.Team, 'Team must be instantiated using new');
-    this.Id = Id;
+    this.Id = id;
     this.players = new Map();
     this.spyMaster = null;
 };
 
 //--    Game
-exports = module.exports = internals.Game = function (id, creator) {
+exports.Game = module.exports.Game = internals.Game = function (id, creator) {
 
     Hoek.assert(this instanceof internals.Game, 'Game must be instantiated using new');
     this.Id = id;
     this.players = new Map();
     this.players.set(creator.Id, creator);
-    this.teams = [new Team(0), new Team(1)];  //note hardcoded to 2 teams
+    this.teams = [new internals.Team(0), new internals.Team(1)];  //note hardcoded to 2 teams
     this.teamedUp = false;
     //count down to 0 when all conditions to start game is meet
     //1 count for spymasters chosen, which requires players to have teamed up already
