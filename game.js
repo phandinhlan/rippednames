@@ -80,7 +80,7 @@ Game.prototype.Start = function () {
 
 Game.prototype.IsReadyToStart = function () {
 
-    return (this.readyToStart === 0 ? true : false );
+    return (this.readyToStart === 0);
 };
 
 Game.prototype._CreditReadyToStartCondition = function () {
