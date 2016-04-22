@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Rippednames</title>
+    </head>
+    <body>
+        <form id>
+            User: <input id="username" type="text"><br>
+            Game: <input id="gameId" type="text"><br>
+            <input class="create" type="submit" value="Create Game">
+            <input class="join" type="submit" value="Join Game">
+        </form>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+        <script>
+            var socket = io();
+
+            $('.create').click(function() {
+                socket.emit('create game', $('#username').val());
+                $('#username').val('');
+                $('#gameId').val('');
+                return false;
+            });
+
+            $('.join').click(function() {
+                socket.emit('join game', { username: $('#username').val(), gameId: $('#gameId').val() });
+                $('#username').val('');
+                $('#gameId').val('');
+                return false;
+            });
+
+        </script>
+    </body>
+</html>

@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/paradicegames/rippednames/issues"
   },
-  "homepage": "https://github.com/paradicegames/rippednames#readme"
+  "homepage": "https://github.com/paradicegames/rippednames#readme",
+  "dependencies": {
+    "express": "^4.10.2",
+    "socket.io": "^1.4.5"
+  }
 }
