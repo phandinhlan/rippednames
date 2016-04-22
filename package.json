@@ -23,6 +23,7 @@
     "socket.io": "^1.4.5"
   },
   "devDependencies": {
+    "code": "^2.2.0",
     "lab": "^10.3.1"
   }
 }
