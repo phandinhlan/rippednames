@@ -1,29 +1,31 @@
 'use strict';
 
-var Hoek = require('hoek');
+const Hoek = require('hoek');
 
-Player.prototype.Player = function (Id) {
+const internals = {};
 
-    Hoek.assert(this instanceof Player, 'Player must be instantiated using new');
-    this.Id = Id;
+exports.Player = module.exports.Player = internals.Player = function (id) {
+
+    Hoek.assert(this instanceof internals.Player, 'Player must be instantiated using new');
+    this.Id = id;
 };
 
-Team.prototype.Team = function (Id) {
+exports.Team = module.exports.Team = internals.Team = function (id) {
 
-    Hoek.assert(this instanceof Team, 'Team must be instantiated using new');
-    this.Id = Id;
+    Hoek.assert(this instanceof internals.Team, 'Team must be instantiated using new');
+    this.Id = id;
     this.players = new Map();
     this.spyMaster = null;
 };
 
 //--    Game
-Game.prototype.Game = function (Id, creator) {
+exports.Game = module.exports.Game = internals.Game = function (id, creator) {
 
-    Hoek.assert(this instanceof Game, 'Game must be instantiated using new');
-    this.Id = Id;
+    Hoek.assert(this instanceof internals.Game, 'Game must be instantiated using new');
+    this.Id = id;
     this.players = new Map();
     this.players.set(creator.Id, creator);
-    this.teams = [new Team(0), new Team(1)];  //note hardcoded to 2 teams
+    this.teams = [new internals.Team(0), new internals.Team(1)];  //note hardcoded to 2 teams
     this.teamedUp = false;
     //count down to 0 when all conditions to start game is meet
     //1 count for spymasters chosen, which requires players to have teamed up already
@@ -33,12 +35,12 @@ Game.prototype.Game = function (Id, creator) {
 };
 
 //--    Game setup
-Game.prototype.AddPlayer = function (player) {
+internals.Game.prototype.AddPlayer = function (player) {
 
     this.players.set(player.Id, player);
 };
 
-Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
+internals.Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
 
     const otherTeamId = (teamId === 0) ? 1 : 0;    //note: hardcoded to 2 teams
     if (this.teams[otherTeamId].has(playerId) === true) {
@@ -50,7 +52,7 @@ Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
     }
 };
 
-Game.prototype.ChooseSpyMasters = function () {
+internals.Game.prototype.ChooseSpyMasters = function () {
 
     if (this.teamedUp === false) {
         //TODO: handle\report error
@@ -66,7 +68,7 @@ Game.prototype.ChooseSpyMasters = function () {
     this._CreditReadyToStartCondition();
 };
 
-Game.prototype.Start = function () {
+internals.Game.prototype.Start = function () {
 
     if (this._IsReadyToStart() === false) {
         return;
@@ -80,18 +82,18 @@ Game.prototype.Start = function () {
     this.gameStarted = true;
 };
 
-Game.prototype.IsReadyToStart = function () {
+internals.Game.prototype.IsReadyToStart = function () {
 
     return (this.readyToStart === 0);
 };
 
-Game.prototype._CreditReadyToStartCondition = function () {
+internals.Game.prototype._CreditReadyToStartCondition = function () {
 
     Hoek.assert(this.IsReadyToStart() === false, 'Ready to start condition out of sync');
     --this.readyToStart;
 };
 
-Game.prototype._DebitReadyToStartCondition = function () {
+internals.Game.prototype._DebitReadyToStartCondition = function () {
 
     Hoek.assert(this.readyToStart !== READY_TO_START_CONDITION_MAX, 'Ready to start condition out of sync');
     ++this.readyToStart;
