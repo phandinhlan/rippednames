@@ -9,11 +9,12 @@ const internals = {};
 internals.gameInstances = {};
 internals.numUsers = 0;
 
-App.get('/', function (req, res) {
+App.get('/', (req, res) => {
+
     res.sendFile(__dirname + '/html/index.html');
 });
 
-Io.on('connection', function(socket) {
+Io.on('connection', (socket) => {
 
     internals.numUsers++;
     socket.username = '';
@@ -21,7 +22,8 @@ Io.on('connection', function(socket) {
 
     console.log('User has connected');
 
-    socket.on('disconnect', function () {
+    socket.on('disconnect', () => {
+
         internals.numUsers--;
 
         if (socket.username !== '' && socket.gameId !== '') {
@@ -32,7 +34,7 @@ Io.on('connection', function(socket) {
 
             // If this is is the last user for this game instance, remove the game
 
-            if (internals.gameInstances[socket.gameId].userCount == 0) {
+            if (internals.gameInstances[socket.gameId].userCount === 0) {
                 delete internals.gameInstances[socket.gameId];
                 console.log('Removing game ' + socket.gameId);
             }
@@ -42,10 +44,9 @@ Io.on('connection', function(socket) {
         console.log('User has disconnected');
     });
 
-    socket.on('create game', function(username) {
+    socket.on('create game', (username) => {
 
-        let gameId = getUnusedGameId();
-        let attemptCount = 0;
+        const gameId = getUnusedGameId();
 
         if (gameId !== '') {
             socket.username = username;
@@ -58,9 +59,9 @@ Io.on('connection', function(socket) {
         }
     });
 
-    socket.on('join game', function(data) {
+    socket.on('join game', (data) => {
 
-        if(internals.gameInstances.hasOwnProperty(data.gameId)) {
+        if (internals.gameInstances.hasOwnProperty(data.gameId)) {
             socket.username = data.username;
             socket.gameId = data.gameId;
             internals.gameInstances[socket.gameId].userCount++;
@@ -71,51 +72,52 @@ Io.on('connection', function(socket) {
         }
     });
 
-    socket.on('select team', function(data) {
+    socket.on('select team', (data) => {
 
     });
 
-    socket.on('select as spymaster', function(data) {
+    socket.on('select as spymaster', (data) => {
 
     });
 
-    socket.on('randomize team', function(data) {
+    socket.on('randomize team', (data) => {
 
     });
 
-    socket.on('start game', function(data) {
+    socket.on('start game', (data) => {
 
     });
 
-    socket.on('reset game', function(data) {
+    socket.on('reset game', (data) => {
 
     });
 
-    socket.on('provide clue', function(data) {
+    socket.on('provide clue', (data) => {
 
     });
 
-    socket.on('select word', function(data) {
+    socket.on('select word', (data) => {
 
     });
 
-    socket.on('pass turn', function(data) {
+    socket.on('pass turn', (data) => {
 
     });
 });
 
-Http.listen(3000, function () {
+Http.listen(3000, () => {
+
     console.log('listening on *:3000');
 });
 
-const getUnusedGameId = function () {
+const getUnusedGameId = () => {
+
     let unusedGameId = '';
 
-    for (let i = 0; i < 10; i++) {
-
-        if(!internals.gameInstances.hasOwnProperty(i.toString())) {
+    for (let i = 0; i < 10; ++i) {
+        if (!internals.gameInstances.hasOwnProperty(i.toString())) {
             unusedGameId = i.toString();
-            break
+            break;
         }
     }
 
