@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "",
+    "lint": "lab -d -f -L"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,14 @@
   "bugs": {
     "url": "https://github.com/paradicegames/rippednames/issues"
   },
-  "homepage": "https://github.com/paradicegames/rippednames#readme"
+  "homepage": "https://github.com/paradicegames/rippednames#readme",
+  "dependencies": {
+    "express": "^4.10.2",
+    "hoek": "^3.0.4",
+    "socket.io": "^1.4.5"
+  },
+  "devDependencies": {
+    "code": "^2.2.0",
+    "lab": "^10.3.1"
+  }
 }
