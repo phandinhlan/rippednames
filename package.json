@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "",
-    "lint": "lab -d -f -L"
+    "test": "lab",
+    "posttest": "npm run lint",
+    "lint": "lab -d -L"
   },
   "repository": {
     "type": "git",
