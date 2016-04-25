@@ -18,6 +18,14 @@ exports.Team = module.exports.Team = internals.Team = function (id) {
     this.spyMaster = null;
 };
 
+exports.GridContentRepo = module.exports.GridContentRepo = internals.GridContentRepo = function (id) {
+
+    Hoek.assert(this instanceof internals.Team, 'Team must be instantiated using new');
+    this.Id = id;
+    //--    Hardcode the content for now
+    this.content = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+};
+
 //--    Game
 exports.Game = module.exports.Game = internals.Game = function (id, creator) {
 
@@ -32,6 +40,9 @@ exports.Game = module.exports.Game = internals.Game = function (id, creator) {
     const READY_TO_START_CONDITION_MAX = 1;
     this.readyToStart = READY_TO_START_CONDITION_MAX;
     this.gameStarted = false;
+
+    this.GRID_SIZE_WIDTH = 5;
+    this.GRIZ_SIZE_HEIGHT = 5;
 };
 
 //--    Game setup
@@ -59,23 +70,39 @@ internals.Game.prototype.ChooseSpyMasters = function () {
         return;
     }
 
-    let randomIndex = Math.floor(Math.random() * this.teams[0].size);
+    let randomIndex = Math.floor(Math.random() * this.teams[0].length);
     this.teams[0].spyMaster = this.players[randomIndex];
 
-    randomIndex = Math.floor(Math.random() * this.teams[1].size);
+    randomIndex = Math.floor(Math.random() * this.teams[1].length);
     this.teams[1].spyMaster = this.players[randomIndex];
 
     this._CreditReadyToStartCondition();
 };
 
-internals.Game.prototype.Start = function () {
+internals.Game.prototype.Start = function (gridContentRepo) {
 
     if (this._IsReadyToStart() === false) {
         return;
     }
 
+    //Setup grid
+    //Here we are faced with a few choices
+    //1. Shuffle the content repo
+    //2. Randomly choose from the repo and do ignore on duplication (chosen because presumably grid size is relatively smaller than repo)
+    const contentRepoIndices = [];
+    const contentCount = this.GRID_SIZE_WIDTH * this.GRIZ_SIZE_HEIGHT;
+    while (contentRepoIndices.length < contentCount) {
+        const randomIndex = Math.floor(Math.random() * gridContentRepo.content.length);
+        if (contentRepoIndices.indexOf(randomIndex) === -1) {
+            contentRepoIndices.push(randomIndex);
+        }
+    }
+    this.grid = [];
+    for (index = 0; index < contentCount; ++i) {
+        grid.push(gridContentRepo.content[contentRepoIndicies[index]]);
+    }
+
     //TODO: implement
-    //Setup board
     //Select spymaster map
     //What else?
 

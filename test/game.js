@@ -17,3 +17,18 @@ lab.experiment('player', { timeout: 1000 }, () => {
         done();
     });
 });
+
+lab.experiment('game', { timeout: 1000 }, () => {
+
+    lab.test('can be instantiated', { parallel: true }, (done) => {
+
+        const player = new Player(0);
+        Code.expect(player.Id).to.equal(0); //avoid no-unused vars from lint
+
+        const game = new Game(0, player0);
+        Code.expect(game).to.be.an.object();
+        Code.expect(game.Id).to.equal(0);
+        Code.expect(game.players.size).to.equal(1);
+        done();
+    });
+});
