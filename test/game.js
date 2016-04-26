@@ -7,6 +7,8 @@ const lab = exports.lab = Lab.script();
 const GameModule = require('../game');
 const Player = GameModule.Player;
 const Game = GameModule.Game;
+const BoardDeck = GameModule.BoardDeck;
+const SpymastersDeck = GameModule.SpymastersDeck;
 
 lab.experiment('player', { timeout: 1000 }, () => {
 
@@ -15,6 +17,28 @@ lab.experiment('player', { timeout: 1000 }, () => {
         const player = new Player(0);
         Code.expect(player).to.be.an.object();
         Code.expect(player.Id).to.equal(0);
+        done();
+    });
+});
+
+lab.experiment('boardDeck', { timeout: 1000 }, () => {
+
+    lab.test('can be instantiated', { parallel: true }, (done) => {
+
+        const deck = new BoardDeck(0);
+        Code.expect(deck).to.be.an.object();
+        Code.expect(deck.Id).to.equal(0);
+        done();
+    });
+});
+
+lab.experiment('spymastersDeck', { timeout: 1000 }, () => {
+
+    lab.test('can be instantiated', { parallel: true }, (done) => {
+
+        const deck = new SpymastersDeck(0);
+        Code.expect(deck).to.be.an.object();
+        Code.expect(deck.Id).to.equal(0);
         done();
     });
 });
@@ -30,6 +54,25 @@ lab.experiment('game', { timeout: 1000 }, () => {
         Code.expect(game).to.be.an.object();
         Code.expect(game.Id).to.equal(0);
         Code.expect(game.players.size).to.equal(1);
+
+        const player1 = new Player(1);
+        const player2 = new Player(2);
+        const player3 = new Player(3);
+
+        game.AddPlayer(player1);
+        Code.expect(game.players.size).to.equal(2);
+        game.AddPlayer(player2);
+        Code.expect(game.players.size).to.equal(3);
+
+        //Do a game.Start here and expect an exception to be thrown because not enough players
+
+        game.AddPlayer(player3);
+        Code.expect(game.players.size).to.equal(4);
+
+        //Do a game.Start here and expect an exception to be thrown because team not assigned
+
+        //Do a game.Start here and expect an exception to be thrown because spy masters not assigned
+
         done();
     });
 });

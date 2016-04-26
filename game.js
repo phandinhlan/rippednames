@@ -18,12 +18,43 @@ exports.Team = module.exports.Team = internals.Team = function (id) {
     this.spyMaster = null;
 };
 
-exports.Deck = module.exports.Deck = internals.Deck = function (id) {
+exports.BoardDeck = module.exports.BoardDeck = internals.BoardDeck = function (id) {
 
-    Hoek.assert(this instanceof internals.Team, 'Deck must be instantiated using new');
+    Hoek.assert(this instanceof internals.BoardDeck, 'BoardDeck must be instantiated using new');
     this.Id = id;
     //--    Hardcode the content for now
     this.content = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+};
+
+exports.SpymastersDeck = module.exports.SpymastersDeck = internals.SpymastersDeck = function (id) {
+
+    Hoek.assert(this instanceof internals.SpymastersDeck, 'SpymastersDeck must be instantiated using new');
+    this.Id = id;
+
+    this.TILE_TYPE_RED_AGENT = 0;
+    this.TILE_TYPE_BLUE_AGENT = 1;
+    this.TILE_TYPE_ASSASSIN = 2;
+    this.TILE_TYPE_CIVILIAN = 3;
+
+    this.MAP_SIZE = 25;
+
+    //--    Hardcode the content for now
+    this.content = [
+        [
+            this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT,
+            this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT,
+            this.TILE_TYPE_ASSASSIN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN,
+            this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT,
+            this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT
+        ],
+        [
+            this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT,
+            this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT,
+            this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT,
+            this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT,
+            this.TILE_TYPE_ASSASSIN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN
+        ]
+    ];
 };
 
 //--    Game
@@ -78,7 +109,7 @@ internals.Game.prototype.ChooseSpyMasters = function () {
     this._CreditReadyToStartCondition();
 };
 
-internals.Game.prototype.Start = function (deck) {
+internals.Game.prototype.Start = function (boardDeck, spymastersDeck) {
 
     if (this._IsReadyToStart() === false) {
         return;
@@ -86,22 +117,25 @@ internals.Game.prototype.Start = function (deck) {
 
     //Setup board
     //Here we are faced with a few choices
-    //1. Shuffle the content deck
-    //2. Randomly choose from the deck and do ignore on duplication (chosen because presumably board size is relatively smaller than deck size)
-    const deckIndices = [];
-    while (deckIndices.size < this.BOARD_SIZE) {
-        const randomIndex = Math.floor(Math.random() * deck.content.size);
-        if (deckIndices.indexOf(randomIndex) === -1) {
-            deckIndices.push(randomIndex);
+    //1. Shuffle the boardDeck
+    //2. Randomly choose from the boardDeck and do ignore on duplication (chosen because presumably board size is relatively smaller than boardDeck size)
+    const boardDeckIndices = [];
+    while (boardDeckIndices.size < this.BOARD_SIZE) {
+        const randomIndex = Math.floor(Math.random() * boardDeck.content.size);
+        if (boardDeckIndices.indexOf(randomIndex) === -1) {
+            boardDeckIndices.push(randomIndex);
         }
     }
     this.board = [];
     for (index = 0; index < this.BOARD_SIZE; ++i) {
-        board.push(deck.content[deckIndices[index]]);
+        board.push(boardDeck.content[boardDeckIndices[index]]);
     }
 
-    //TODO: implement
     //Select spymaster map
+    const spymastersMapIndex = Math.floor(Math.random() * spymastersDeck.content.size);
+    this.spymastersMap = spymastersDeck.content[spymastersMapIndex];
+
+    //TODO: implement
     //What else?
 
     this.gameStarted = true;
