@@ -18,9 +18,9 @@ exports.Team = module.exports.Team = internals.Team = function (id) {
     this.spyMaster = null;
 };
 
-exports.GridContentRepo = module.exports.GridContentRepo = internals.GridContentRepo = function (id) {
+exports.Deck = module.exports.Deck = internals.Deck = function (id) {
 
-    Hoek.assert(this instanceof internals.Team, 'Team must be instantiated using new');
+    Hoek.assert(this instanceof internals.Team, 'Deck must be instantiated using new');
     this.Id = id;
     //--    Hardcode the content for now
     this.content = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -41,8 +41,7 @@ exports.Game = module.exports.Game = internals.Game = function (id, creator) {
     this.readyToStart = READY_TO_START_CONDITION_MAX;
     this.gameStarted = false;
 
-    this.GRID_SIZE_WIDTH = 5;
-    this.GRIZ_SIZE_HEIGHT = 5;
+    this.BOARD_SIZE = 25;
 };
 
 //--    Game setup
@@ -79,27 +78,26 @@ internals.Game.prototype.ChooseSpyMasters = function () {
     this._CreditReadyToStartCondition();
 };
 
-internals.Game.prototype.Start = function (gridContentRepo) {
+internals.Game.prototype.Start = function (deck) {
 
     if (this._IsReadyToStart() === false) {
         return;
     }
 
-    //Setup grid
+    //Setup board
     //Here we are faced with a few choices
-    //1. Shuffle the content repo
-    //2. Randomly choose from the repo and do ignore on duplication (chosen because presumably grid size is relatively smaller than repo)
-    const contentRepoIndices = [];
-    const contentCount = this.GRID_SIZE_WIDTH * this.GRIZ_SIZE_HEIGHT;
-    while (contentRepoIndices.size < contentCount) {
-        const randomIndex = Math.floor(Math.random() * gridContentRepo.content.size);
-        if (contentRepoIndices.indexOf(randomIndex) === -1) {
-            contentRepoIndices.push(randomIndex);
+    //1. Shuffle the content deck
+    //2. Randomly choose from the deck and do ignore on duplication (chosen because presumably board size is relatively smaller than deck size)
+    const deckIndices = [];
+    while (deckIndices.size < this.BOARD_SIZE) {
+        const randomIndex = Math.floor(Math.random() * deck.content.size);
+        if (deckIndices.indexOf(randomIndex) === -1) {
+            deckIndices.push(randomIndex);
         }
     }
-    this.grid = [];
-    for (index = 0; index < contentCount; ++i) {
-        grid.push(gridContentRepo.content[contentRepoIndicies[index]]);
+    this.board = [];
+    for (index = 0; index < this.BOARD_SIZE; ++i) {
+        board.push(deck.content[deckIndices[index]]);
     }
 
     //TODO: implement
