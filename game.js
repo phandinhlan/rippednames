@@ -65,7 +65,7 @@ exports.Game = module.exports.Game = internals.Game = function (id, creator) {
     this.players = new Map();
     this.players.set(creator.id, creator);
     this.teams = [new internals.Team(0), new internals.Team(1)];  //note hardcoded to 2 teams
-    this.teamedUp = false;
+    this.unteamedPlayerCount = 1;
     //count down to 0 when all conditions to start game is meet
     //1 count for spymasters chosen, which requires players to have teamed up already
     const READY_TO_START_CONDITION_MAX = 1;
@@ -79,6 +79,7 @@ exports.Game = module.exports.Game = internals.Game = function (id, creator) {
 internals.Game.prototype.AddPlayer = function (player) {
 
     this.players.set(player.id, player);
+    ++(this.unteamedPlayerCount);
 };
 
 internals.Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
@@ -90,13 +91,18 @@ internals.Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
 
     if (this.teams[teamId].players.indexOf(playerId) === -1) {
         this.teams[teamId].players.push(playerId);
+        --(this.unteamedPlayerCount);
     }
 };
 
 internals.Game.prototype.ChooseSpyMasters = function () {
 
-    if (this.teamedUp === false) {
-        throw 'Players need to team up first.';
+    if (this.unteamedPlayerCount !== 0) {
+        let verb = 'are';
+        if (this.unteamedPlayerCount === 1) {
+            verb = 'is';
+        }
+        throw 'Players need to team up first. There ' + verb + 'players unteamed.';
     }
 
     let randomIndex = Math.floor(Math.random() * this.teams[0].size);
