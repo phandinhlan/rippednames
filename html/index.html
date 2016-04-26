@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Rippednames</title>
+    </head>
+    <body>
+        <form id= 'createjoin'>
+            User: <input id="username" type="text"><br>
+            Game: <input id="gameId" type="text"><br>
+            <input class="create" type="submit" value="Create Game">
+            <input class="join" type="submit" value="Join Game">
+        </form>
+        <div id="text">
+        </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+        <script>
+            let socket = io();
+
+            const createGameCallback = function (data) {
+                document.getElementById('text').innerHTML += 'create game: ' + JSON.stringify(data) + '<br>';
+            };
+
+            const joinGameCallback = function (data) {
+                document.getElementById('text').innerHTML += 'join game: ' + JSON.stringify(data) + '<br>';
+            };
+
+            const createGame = () => {
+                socket.emit('create game', { username: $('#username').val() }, createGameCallback);
+                $('#username').val('');
+                $('#gameId').val('');
+                return false;
+            };
+
+            const joinGame = () => {
+                socket.emit('join game', { username: $('#username').val(), gameId: $('#gameId').val() }, joinGameCallback);
+                $('#username').val('');
+                $('#gameId').val('');
+                return false;
+            };
+
+            socket.on('update team settings', (data) => {
+                document.getElementById('text').innerHTML += 'players: ' + JSON.stringify(data) + '<br>';
+            });
+
+            $('.create').click(createGame);
+            $('.join').click(joinGame);
+        </script>
+    </body>
+</html>
