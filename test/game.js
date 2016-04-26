@@ -94,7 +94,7 @@ lab.experiment('game', { timeout: 1000 }, () => {
 
         //Do a game.Start here and expect an exception to be thrown because spy masters not assigned
 
-        game.ChooseSpyMasters();
+        //game.ChooseSpyMasters();
 
         done();
     });

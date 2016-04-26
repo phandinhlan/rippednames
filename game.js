@@ -96,8 +96,7 @@ internals.Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
 internals.Game.prototype.ChooseSpyMasters = function () {
 
     if (this.teamedUp === false) {
-        //TODO: handle\report error
-        return;
+        throw 'Players need to team up first.';
     }
 
     let randomIndex = Math.floor(Math.random() * this.teams[0].size);
@@ -112,7 +111,7 @@ internals.Game.prototype.ChooseSpyMasters = function () {
 internals.Game.prototype.Start = function (boardDeck, spymastersDeck) {
 
     if (this._IsReadyToStart() === false) {
-        return;
+        throw 'Start game requirements has not been met.';
     }
 
     //Setup board
