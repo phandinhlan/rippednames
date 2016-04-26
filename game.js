@@ -7,21 +7,21 @@ const internals = {};
 exports.Player = module.exports.Player = internals.Player = function (id) {
 
     Hoek.assert(this instanceof internals.Player, 'Player must be instantiated using new');
-    this.Id = id;
+    this.id = id;
 };
 
 exports.Team = module.exports.Team = internals.Team = function (id) {
 
     Hoek.assert(this instanceof internals.Team, 'Team must be instantiated using new');
-    this.Id = id;
-    this.players = new Map();
+    this.id = id;
+    this.players = [];
     this.spyMaster = null;
 };
 
 exports.BoardDeck = module.exports.BoardDeck = internals.BoardDeck = function (id) {
 
     Hoek.assert(this instanceof internals.BoardDeck, 'BoardDeck must be instantiated using new');
-    this.Id = id;
+    this.id = id;
     //--    Hardcode the content for now
     this.content = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 };
@@ -29,7 +29,7 @@ exports.BoardDeck = module.exports.BoardDeck = internals.BoardDeck = function (i
 exports.SpymastersDeck = module.exports.SpymastersDeck = internals.SpymastersDeck = function (id) {
 
     Hoek.assert(this instanceof internals.SpymastersDeck, 'SpymastersDeck must be instantiated using new');
-    this.Id = id;
+    this.id = id;
 
     this.TILE_TYPE_RED_AGENT = 0;
     this.TILE_TYPE_BLUE_AGENT = 1;
@@ -61,9 +61,9 @@ exports.SpymastersDeck = module.exports.SpymastersDeck = internals.SpymastersDec
 exports.Game = module.exports.Game = internals.Game = function (id, creator) {
 
     Hoek.assert(this instanceof internals.Game, 'Game must be instantiated using new');
-    this.Id = id;
+    this.id = id;
     this.players = new Map();
-    this.players.set(creator.Id, creator);
+    this.players.set(creator.id, creator);
     this.teams = [new internals.Team(0), new internals.Team(1)];  //note hardcoded to 2 teams
     this.teamedUp = false;
     //count down to 0 when all conditions to start game is meet
@@ -78,18 +78,18 @@ exports.Game = module.exports.Game = internals.Game = function (id, creator) {
 //--    Game setup
 internals.Game.prototype.AddPlayer = function (player) {
 
-    this.players.set(player.Id, player);
+    this.players.set(player.id, player);
 };
 
 internals.Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
 
     const otherTeamId = (teamId === 0) ? 1 : 0;    //note: hardcoded to 2 teams
-    if (this.teams[otherTeamId].has(playerId) === true) {
-        this.teams[otherTeamId].delete(player.Id);
+    if (this.teams[otherTeamId].players.indexOf(playerId) !== -1) {
+        this.teams[otherTeamId].players.delete(playerId);
     }
 
-    if (this.teams[teamId].has(player.Id) === false) {
-        this.teams[teamId].set();
+    if (this.teams[teamId].players.indexOf(playerId) === -1) {
+        this.teams[teamId].players.push(playerId);
     }
 };
 
