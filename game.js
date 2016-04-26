@@ -18,6 +18,14 @@ exports.Team = module.exports.Team = internals.Team = function (id) {
     this.spyMaster = null;
 };
 
+exports.Deck = module.exports.Deck = internals.Deck = function (id) {
+
+    Hoek.assert(this instanceof internals.Team, 'Deck must be instantiated using new');
+    this.Id = id;
+    //--    Hardcode the content for now
+    this.content = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+};
+
 //--    Game
 exports.Game = module.exports.Game = internals.Game = function (id, creator) {
 
@@ -32,6 +40,8 @@ exports.Game = module.exports.Game = internals.Game = function (id, creator) {
     const READY_TO_START_CONDITION_MAX = 1;
     this.readyToStart = READY_TO_START_CONDITION_MAX;
     this.gameStarted = false;
+
+    this.BOARD_SIZE = 25;
 };
 
 //--    Game setup
@@ -68,14 +78,29 @@ internals.Game.prototype.ChooseSpyMasters = function () {
     this._CreditReadyToStartCondition();
 };
 
-internals.Game.prototype.Start = function () {
+internals.Game.prototype.Start = function (deck) {
 
     if (this._IsReadyToStart() === false) {
         return;
     }
 
-    //TODO: implement
     //Setup board
+    //Here we are faced with a few choices
+    //1. Shuffle the content deck
+    //2. Randomly choose from the deck and do ignore on duplication (chosen because presumably board size is relatively smaller than deck size)
+    const deckIndices = [];
+    while (deckIndices.size < this.BOARD_SIZE) {
+        const randomIndex = Math.floor(Math.random() * deck.content.size);
+        if (deckIndices.indexOf(randomIndex) === -1) {
+            deckIndices.push(randomIndex);
+        }
+    }
+    this.board = [];
+    for (index = 0; index < this.BOARD_SIZE; ++i) {
+        board.push(deck.content[deckIndices[index]]);
+    }
+
+    //TODO: implement
     //Select spymaster map
     //What else?
 
