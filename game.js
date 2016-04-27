@@ -116,7 +116,7 @@ internals.Game.prototype.ChooseSpyMasters = function () {
 
 internals.Game.prototype.Start = function (boardDeck, spymastersDeck) {
 
-    if (this._IsReadyToStart() === false) {
+    if (this.IsReadyToStart() === false) {
         throw 'Start game requirements has not been met.';
     }
 
@@ -132,8 +132,8 @@ internals.Game.prototype.Start = function (boardDeck, spymastersDeck) {
         }
     }
     this.board = [];
-    for (index = 0; index < this.BOARD_SIZE; ++i) {
-        board.push(boardDeck.content[boardDeckIndices[index]]);
+    for (let i = 0; i < this.BOARD_SIZE; ++i) {
+        this.board.push(boardDeck.content[boardDeckIndices[i]]);
     }
 
     //Select spymaster map

@@ -96,6 +96,11 @@ lab.experiment('game', { timeout: 1000 }, () => {
 
         game.ChooseSpyMasters();
 
+        const boardDeck = new BoardDeck(0);
+        const spymastersDeck = new SpymastersDeck(0);
+
+        game.Start(boardDeck, spymastersDeck);
+
         done();
     });
 });
