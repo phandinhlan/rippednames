@@ -18,43 +18,11 @@ exports.Team = module.exports.Team = internals.Team = function (id) {
     this.spyMaster = null;
 };
 
-exports.BoardDeck = module.exports.BoardDeck = internals.BoardDeck = function (id) {
+exports.BoardElement = module.exports.BoardElement = internals.BoardElement = function (value, type) {
 
-    Hoek.assert(this instanceof internals.BoardDeck, 'BoardDeck must be instantiated using new');
-    this.id = id;
-    //--    Hardcode the content for now
-    this.content = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-};
-
-exports.SpymastersDeck = module.exports.SpymastersDeck = internals.SpymastersDeck = function (id) {
-
-    Hoek.assert(this instanceof internals.SpymastersDeck, 'SpymastersDeck must be instantiated using new');
-    this.id = id;
-
-    this.TILE_TYPE_RED_AGENT = 0;
-    this.TILE_TYPE_BLUE_AGENT = 1;
-    this.TILE_TYPE_ASSASSIN = 2;
-    this.TILE_TYPE_CIVILIAN = 3;
-
-    this.MAP_SIZE = 25;
-
-    //--    Hardcode the content for now
-    this.content = [
-        [
-            this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT,
-            this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT,
-            this.TILE_TYPE_ASSASSIN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN,
-            this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT,
-            this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT
-        ],
-        [
-            this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT,
-            this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT,
-            this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT, this.TILE_TYPE_RED_AGENT,
-            this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT, this.TILE_TYPE_BLUE_AGENT,
-            this.TILE_TYPE_ASSASSIN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN, this.TILE_TYPE_CIVILIAN
-        ]
-    ];
+    Hoek.assert(this instanceof internals.BoardElement, 'BoardElement must be instantiated using new');
+    this.value = value;
+    this.type = type;
 };
 
 //--    Game
@@ -114,34 +82,15 @@ internals.Game.prototype.ChooseSpyMasters = function () {
     this._CreditReadyToStartCondition();
 };
 
-internals.Game.prototype.Start = function (boardDeck, spymastersDeck) {
+internals.Game.prototype.Start = function (board) {
 
     if (this.IsReadyToStart() === false) {
         throw 'Start game requirements has not been met.';
     }
 
-    //Setup board
-    //Here we are faced with a few choices
-    //1. Shuffle the boardDeck
-    //2. Randomly choose from the boardDeck and do ignore on duplication (chosen because presumably board size is relatively smaller than boardDeck size)
-    const boardDeckIndices = [];
-    while (boardDeckIndices.size < this.BOARD_SIZE) {
-        const randomIndex = Math.floor(Math.random() * boardDeck.content.size);
-        if (boardDeckIndices.indexOf(randomIndex) === -1) {
-            boardDeckIndices.push(randomIndex);
-        }
-    }
-    this.board = [];
-    for (let i = 0; i < this.BOARD_SIZE; ++i) {
-        this.board.push(boardDeck.content[boardDeckIndices[i]]);
-    }
+    this.board = board;
 
-    //Select spymaster map
-    const spymastersMapIndex = Math.floor(Math.random() * spymastersDeck.content.size);
-    this.spymastersMap = spymastersDeck.content[spymastersMapIndex];
-
-    //TODO: implement
-    //What else?
+    this.activeTeam = 0;    //team to start first
 
     this.gameStarted = true;
 };
