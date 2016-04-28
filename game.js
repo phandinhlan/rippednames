@@ -100,6 +100,19 @@ internals.Game.prototype.IsReadyToStart = function () {
     return (this.readyToStart === 0);
 };
 
+internals.Game.prototype.SubmitChoice = function (elementValue) {
+
+    const index = this.board.indexOf(elementValue);
+    if (index === -1) {
+        Hoek.assert(0, 'Value submitted does not exist.');
+    }
+
+    const otherTeamId = (teamId === 0) ? 1 : 0;    //note: hardcoded to 2 teams
+    this.activeTeam = otherTeamId;
+
+    return (this.board[index]);
+};
+
 internals.Game.prototype._CreditReadyToStartCondition = function () {
 
     Hoek.assert(this.IsReadyToStart() === false, 'Ready to start condition out of sync');
