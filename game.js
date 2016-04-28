@@ -7,34 +7,33 @@ const internals = {};
 exports.Player = module.exports.Player = internals.Player = function (id) {
 
     Hoek.assert(this instanceof internals.Player, 'Player must be instantiated using new');
-    this.Id = id;
+    this.id = id;
 };
 
 exports.Team = module.exports.Team = internals.Team = function (id) {
 
     Hoek.assert(this instanceof internals.Team, 'Team must be instantiated using new');
-    this.Id = id;
-    this.players = new Map();
+    this.id = id;
+    this.players = [];
     this.spyMaster = null;
 };
 
-exports.Deck = module.exports.Deck = internals.Deck = function (id) {
+exports.BoardElement = module.exports.BoardElement = internals.BoardElement = function (value, type) {
 
-    Hoek.assert(this instanceof internals.Team, 'Deck must be instantiated using new');
-    this.Id = id;
-    //--    Hardcode the content for now
-    this.content = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    Hoek.assert(this instanceof internals.BoardElement, 'BoardElement must be instantiated using new');
+    this.value = value;
+    this.type = type;
 };
 
 //--    Game
 exports.Game = module.exports.Game = internals.Game = function (id, creator) {
 
     Hoek.assert(this instanceof internals.Game, 'Game must be instantiated using new');
-    this.Id = id;
+    this.id = id;
     this.players = new Map();
-    this.players.set(creator.Id, creator);
+    this.players.set(creator.id, creator);
     this.teams = [new internals.Team(0), new internals.Team(1)];  //note hardcoded to 2 teams
-    this.teamedUp = false;
+    this.unteamedPlayerCount = 1;
     //count down to 0 when all conditions to start game is meet
     //1 count for spymasters chosen, which requires players to have teamed up already
     const READY_TO_START_CONDITION_MAX = 1;
@@ -47,26 +46,31 @@ exports.Game = module.exports.Game = internals.Game = function (id, creator) {
 //--    Game setup
 internals.Game.prototype.AddPlayer = function (player) {
 
-    this.players.set(player.Id, player);
+    this.players.set(player.id, player);
+    ++(this.unteamedPlayerCount);
 };
 
 internals.Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
 
     const otherTeamId = (teamId === 0) ? 1 : 0;    //note: hardcoded to 2 teams
-    if (this.teams[otherTeamId].has(playerId) === true) {
-        this.teams[otherTeamId].delete(player.Id);
+    if (this.teams[otherTeamId].players.indexOf(playerId) !== -1) {
+        this.teams[otherTeamId].players.delete(playerId);
     }
 
-    if (this.teams[teamId].has(player.Id) === false) {
-        this.teams[teamId].set();
+    if (this.teams[teamId].players.indexOf(playerId) === -1) {
+        this.teams[teamId].players.push(playerId);
+        --(this.unteamedPlayerCount);
     }
 };
 
 internals.Game.prototype.ChooseSpyMasters = function () {
 
-    if (this.teamedUp === false) {
-        //TODO: handle\report error
-        return;
+    if (this.unteamedPlayerCount !== 0) {
+        let verb = 'are';
+        if (this.unteamedPlayerCount === 1) {
+            verb = 'is';
+        }
+        throw 'Players need to team up first. There ' + verb + 'players unteamed.';
     }
 
     let randomIndex = Math.floor(Math.random() * this.teams[0].size);
@@ -78,31 +82,15 @@ internals.Game.prototype.ChooseSpyMasters = function () {
     this._CreditReadyToStartCondition();
 };
 
-internals.Game.prototype.Start = function (deck) {
+internals.Game.prototype.Start = function (board) {
 
-    if (this._IsReadyToStart() === false) {
-        return;
+    if (this.IsReadyToStart() === false) {
+        throw 'Start game requirements has not been met.';
     }
 
-    //Setup board
-    //Here we are faced with a few choices
-    //1. Shuffle the content deck
-    //2. Randomly choose from the deck and do ignore on duplication (chosen because presumably board size is relatively smaller than deck size)
-    const deckIndices = [];
-    while (deckIndices.size < this.BOARD_SIZE) {
-        const randomIndex = Math.floor(Math.random() * deck.content.size);
-        if (deckIndices.indexOf(randomIndex) === -1) {
-            deckIndices.push(randomIndex);
-        }
-    }
-    this.board = [];
-    for (index = 0; index < this.BOARD_SIZE; ++i) {
-        board.push(deck.content[deckIndices[index]]);
-    }
+    this.board = board;
 
-    //TODO: implement
-    //Select spymaster map
-    //What else?
+    this.activeTeam = 0;    //team to start first
 
     this.gameStarted = true;
 };
