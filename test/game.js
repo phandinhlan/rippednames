@@ -85,6 +85,12 @@ lab.experiment('game', { timeout: 1000 }, () => {
 
         game.ChooseSpyMasters();
 
+        const teams = game.GetTeams();
+        Code.expect(teams[0].players[0]).to.equal(creator.id);
+        Code.expect(teams[0].players[1]).to.equal(player1.id);
+        Code.expect(teams[1].players[0]).to.equal(player2.id);
+        Code.expect(teams[1].players[1]).to.equal(player3.id);
+
         const TYPE_RED_AGENT = 0;
         const TYPE_BLUE_AGENT = 1;
         const TYPE_ASSASSIN = 2;

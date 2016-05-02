@@ -82,6 +82,11 @@ internals.Game.prototype.ChooseSpyMasters = function () {
     this._CreditReadyToStartCondition();
 };
 
+internals.Game.prototype.GetTeams = function () {
+
+    return (this.teams);
+};
+
 internals.Game.prototype.Start = function (board) {
 
     if (this.IsReadyToStart() === false) {
@@ -98,6 +103,19 @@ internals.Game.prototype.Start = function (board) {
 internals.Game.prototype.IsReadyToStart = function () {
 
     return (this.readyToStart === 0);
+};
+
+internals.Game.prototype.SubmitChoice = function (elementValue) {
+
+    const index = this.board.indexOf(elementValue);
+    if (index === -1) {
+        Hoek.assert(0, 'Value submitted does not exist.');
+    }
+
+    const otherTeamId = (teamId === 0) ? 1 : 0;    //note: hardcoded to 2 teams
+    this.activeTeam = otherTeamId;
+
+    return (this.board[index]);
 };
 
 internals.Game.prototype._CreditReadyToStartCondition = function () {
