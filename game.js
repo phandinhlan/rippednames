@@ -82,6 +82,11 @@ internals.Game.prototype.ChooseSpyMasters = function () {
     this._CreditReadyToStartCondition();
 };
 
+internals.Game.prototype.GetTeams = function () {
+
+    return (this.teams);
+};
+
 internals.Game.prototype.Start = function (board) {
 
     if (this.IsReadyToStart() === false) {
