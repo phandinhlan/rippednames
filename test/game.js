@@ -106,6 +106,9 @@ lab.experiment('game', { timeout: 1000 }, () => {
         //Do a game.Start here and expect an exception to be thrown because spy masters not assigned
 
         game.ChooseSpyMasters();
+        teams = game.GetTeams();
+        Code.expect(teams[0].players.indexOf(teams[0].spyMaster)).to.not.equal(-1);
+        Code.expect(teams[1].players.indexOf(teams[1].spyMaster)).to.not.equal(-1);
 
         const TYPE_RED_AGENT = 0;
         const TYPE_BLUE_AGENT = 1;

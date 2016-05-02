@@ -116,10 +116,10 @@ internals.Game.prototype.ChooseSpyMasters = function () {
     }
 
     let randomIndex = Math.floor(Math.random() * this.teams[0].players.length);
-    this.teams[0].spyMaster = this.players[randomIndex];
+    this.teams[0].spyMaster = this.teams[0].players[randomIndex];
 
     randomIndex = Math.floor(Math.random() * this.teams[1].players.length);
-    this.teams[1].spyMaster = this.players[randomIndex];
+    this.teams[1].spyMaster = this.teams[1].players[randomIndex];
 
     this._CreditReadyToStartCondition();
 };
