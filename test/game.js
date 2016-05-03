@@ -106,8 +106,11 @@ lab.experiment('game', { timeout: 1000 }, () => {
         //Do a game.Start here and expect an exception to be thrown because spy masters not assigned
 
         teams = game.GetTeams();
-        game.AssignSpymaster(0, teams[0].players[0]);
-        Code.expect(teams[0].spyMaster).to.equal(teams[0].players[0]);
+        game.AssignSpymaster(1, teams[1].players[0]);
+        Code.expect(teams[1].spyMaster).to.equal(teams[1].players[0]);
+        //spymaster changing team
+        game.AssignPlayerToTeam(teams[1].players[0], 0);
+        Code.expect(teams[1].spyMaster).to.equal(null);
 
         game.ChooseSpyMasters();
         teams = game.GetTeams();

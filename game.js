@@ -60,6 +60,9 @@ internals.Game.prototype.AssignPlayerToTeam = function (playerId, teamId) {
     if (index !== -1) {
         this.teams[otherTeamId].players.splice(index, 1);
         ++(this.unteamedPlayerCount);
+        if (this.teams[otherTeamId].spyMaster === playerId) {
+            this.teams[otherTeamId].spyMaster = null;
+        }
     }
 
     if (this.teams[teamId].players.indexOf(playerId) === -1) {
