@@ -105,6 +105,21 @@ internals.Game.prototype.AssignTeamsRandomly = function () {
     }
 };
 
+internals.Game.prototype.AssignSpymaster = function (teamId, playerId) {
+
+    if (this.unteamedPlayerCount !== 0) {
+        let verb = 'are';
+        if (this.unteamedPlayerCount === 1) {
+            verb = 'is';
+        }
+        throw 'Players need to team up first. There ' + verb + ' players unteamed.';
+    }
+
+    Hoek.assert(this.teams[teamId].players.indexOf(playerId) !== -1, 'Player must be on the corresponding team');
+
+    this.teams[teamId].spyMaster = playerId;
+};
+
 internals.Game.prototype.ChooseSpyMasters = function () {
 
     if (this.unteamedPlayerCount !== 0) {
