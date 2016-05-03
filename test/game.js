@@ -96,6 +96,12 @@ lab.experiment('game', { timeout: 1000 }, () => {
         teams = game.GetTeams();
         Code.expect(teams[0].players.length).to.equal(2);
         Code.expect(teams[1].players.length).to.equal(3);
+        Code.expect(game.players.length).to.equal(5);
+        Code.expect(game.players[0]).to.equal(creator.id);
+        Code.expect(game.players[1]).to.equal(player1.id);
+        Code.expect(game.players[2]).to.equal(player2.id);
+        Code.expect(game.players[3]).to.equal(player3.id);
+        Code.expect(game.players[4]).to.equal(player4.id);
 
         //Change team
         game.AssignPlayerToTeam(teams[1].players[2], 0);

@@ -87,12 +87,6 @@ internals.Game.prototype.AssignTeamsRandomly = function () {
     while (this.teams[0].players.length < firstTeamSize) {
         const randomIndex = Math.floor(Math.random() * this.players.length);
         this.AssignPlayerToTeam(this.players[randomIndex], 0);
-        /*
-        if (this.teams[0].players.indexOf(this.players[randomIndex]) === -1) {
-            this.teams[0].players.push(this.players[randomIndex]);
-            --(this.unteamedPlayerCount)
-        }
-        */
     }
 
     while (this.teams[1].players.length < secondTeamSize) {
@@ -100,10 +94,6 @@ internals.Game.prototype.AssignTeamsRandomly = function () {
         //Make sure the player isn't in the other team already
         if ((this.teams[0].players.indexOf(this.players[randomIndex])) === -1) {
             this.AssignPlayerToTeam(this.players[randomIndex], 1);
-            /*
-            this.teams[1].players.push(this.players[randomIndex]);
-            --(this.unteamedPlayerCount)
-            */
         }
     }
 };
